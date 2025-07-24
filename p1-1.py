@@ -3,6 +3,8 @@ import numpy as np
 import mss
 import keyboard
 from collections import defaultdict
+import pyautogui #pip install pyautogui
+
 
 GRID_TOP_LEFT = (660, 357)
 CELL_SIZE = 25
@@ -13,6 +15,7 @@ def is_close(val, target, tol=3):
     return abs(val - target) <= tol
 
 def capture_screen():
+    pyautogui.moveTo(0, 0)
     with mss.mss() as sct:
         monitor = sct.monitors[1]
         screenshot = sct.grab(monitor)
@@ -38,7 +41,7 @@ def classify_cell(cell):
     center = cell[margin:h - margin, margin:w - margin]
     avg_color = np.mean(center, axis=(0, 1))
     b, g, r = avg_color
-
+    # print(r,g,b)
     if (is_close(r, 170) and is_close(g, 215) and is_close(b, 81)) \
        or (is_close(r, 162) and is_close(g, 209) and is_close(b, 73)):
         return 'h'  #草
@@ -62,6 +65,9 @@ def classify_cell(cell):
     if (is_close(r, 198) and is_close(g, 156) and is_close(b, 155)) \
        or (is_close(r, 210) and is_close(g, 164) and is_close(b, 160)):
         return '4'
+    if (is_close(r, 189) and is_close(g, 167) and is_close(b, 59)) \
+       or (is_close(r, 183) and is_close(g, 163) and is_close(b, 53)):
+        return 'f' #旗子
 
     return 'u'  # 無法識別
 
